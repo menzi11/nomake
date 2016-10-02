@@ -1,10 +1,23 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+import os
+from unitls import __get_file_extension
 
 
-def __get_file_extension(path):  
-    return os.path.splitext(path)[1]
+solutionName = str()
+VST_UniqueID = str()
+projects = dict()
+
+def saveToFile( file ) :
+
+def loadFromFile( file ) :
 
 def set_solution_name( solutionName ) :
     solutionName = solutionName
+
+def set_project_VST_UniqueID( id ) :
+    VST_UniqueID = id
 
 def add_project( name , type = "lib" ) :
     if type != "lib" or type != "exe" or type != "dll" :
@@ -14,25 +27,11 @@ def add_project( name , type = "lib" ) :
         projects[projectName]["isAudioPlugin"] = False
         projects[projectName]["icon"] = ""
     projects[name]["type"] = type
-
+    
 def set_project_is_AudioPlugin( projectNames ) :
     check_project_exsit(projectNames)
     for x in projectNames :
         projects[x]["isAudioPlugin"] = True
-
-
-def __add_files( projectNames , debugOrRel , fileOrDir , extNames , subStrInDict , useDirNotFile = False ) :
-    check_project_exsit(projectNames)
-    tmp = set()
-    for root, dirs, files in list_dirs :
-        for file in files :
-            if __get_file_extension(file) is in extNames :
-                tmp.add(file)
-    for x in projectNames :
-        if debugOrRel is None or "" in debugOrRel or "debug" in debugOrRel :
-            projects[x]["icon"]["debug"][subStrInDict].add( tmp )
-        if debugOrRel is None or "" in debugOrRel or "release" in debugOrRel :
-            projects[x]["icon"]["release"][subStrInDict].add( tmp )
 
 def add_includes( projectNames , debugOrRel , bit32Or64 , dir ) :
     __add_files(projectNames,debugOrRel,fileOrDir,??,"includes",True)
@@ -80,8 +79,18 @@ def add_icon( projectNames , file ) :
     for x in projectNames :
         projects[x]["icon"] = file    
 
-def set_project_VST_UniqueID( id ) :
-    VST_UniqueID = id
+    def __add_files( projectNames , debugOrRel , fileOrDir , extNames , subStrInDict , useDirNotFile = False ) :
+        check_project_exsit(projectNames)
+        tmp = set()
+        for root, dirs, files in list_dirs :
+            for file in files :
+                if __get_file_extension(file) is in extNames :
+                    tmp.add(file)
+        for x in projectNames :
+            if debugOrRel is None or "" in debugOrRel or "debug" in debugOrRel :
+                projects[x]["icon"]["debug"][subStrInDict].add( tmp )
+            if debugOrRel is None or "" in debugOrRel or "release" in debugOrRel :
+                projects[x]["icon"]["release"][subStrInDict].add( tmp )
 
 add_project_build_path( ["h7s_exe"] , ["debug"] , ["32","64"] , "c:/test/debug" )
 
@@ -92,11 +101,6 @@ add_project_flag( ["h7s_exe"] , ["debug"] , "-O2" , "-SSE2" )
 set_project_ICC_flags( ["h7s_exe"] , ["debug"] , "-O2" , "-SSE2" )
 
 add_script_when_build_finished( ["AudioEffectImpl"] , "scripts/vst_rename.py" )
-
-solutionName = str()
-VST_UniqueID = str()
-projects = dict()
-
 
 
 nomake -out "d:/xxx" -msvc2015 -icc
